@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "party":"echo Party time! && start https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "motivate":"echo You can do it team INSIGHT-X! Keep pushing forward! && start https://www.youtube.com/watch?v=ZXsQAXx_ao0",
+    "rageQuit":"echo Rage quitting in 5...4...3...2...1... && rm -rf node_modules  && echo Just kidding, don't do that! && start https://www.youtube.com/watch?v=QH2-TGUlwu4",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
