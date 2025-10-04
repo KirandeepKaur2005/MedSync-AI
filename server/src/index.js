@@ -7,7 +7,7 @@ import authRoutes from "../src/routes/auth.js";
 import startNotificationScheduler from "./api/notificationController.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 
-dotenv.config({path: '../.env'});
+dotenv.config();
 const app = express();
 
 const allowedOrigins = [
