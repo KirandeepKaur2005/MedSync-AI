@@ -39,10 +39,6 @@ export const NotificationProvider = ({ children }) => {
             }
         }, [localuser]);
 
-
-
-
-  
     return (
         <NotificationContext.Provider value={{
             notifications,
