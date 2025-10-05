@@ -34,7 +34,7 @@ const calculateReportMetrics = async (allMedi, startDate, endDate) => {
         });
 
         const scheduled = relavantHistory.length;
-        const taken = relavantHistory.map(h => h.status === 'taken').length;
+        const taken = relavantHistory.filter(h => h.status === 'taken').length;
         const missed = scheduled - taken;
 
         totalScheduledDoses += scheduled;
@@ -106,6 +106,8 @@ export default generateReport = async (req, res) => {
         };
 
         //do the api request to generate the pdf from the generated data
+        const apiUrl = 'https://rest.apitemplate.io/v2/create-pdf';
+
         const response = await axios.post(apiUrl, JsonPayload, {
             headers: {
                 'X-API-KEY': process.env.REPORT_API,
