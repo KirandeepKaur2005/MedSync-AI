@@ -34,11 +34,11 @@ router.get("/callback", async (req, res) => {
 
       console.log("Tokens saved successfully for user:", userId);
   
-      res.json({ success: true, tokens });
+      res.redirect(`http://localhost:5173/dashboard?linked=true`);
 
     } catch (err) {
       console.error(err);
-      res.status(500).json({ success: false, error: err.message });
+      res.status(500).send("Error linking Google Calendar");
     }
   });
 
@@ -49,6 +49,7 @@ router.get("/callback", async (req, res) => {
       if (!user) return res.status(400).json({ linked: false, message: "User not found" });
       if (!user.googleTokens) return res.status(400).json({ linked: false, message: "No Google tokens found" });
 
+      console.log("User tokens:", user.googleTokens);
   
       const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,

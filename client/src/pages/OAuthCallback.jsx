@@ -6,39 +6,17 @@ const OAuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    const userId = searchParams.get("state"); // userId passed via state
+    const linked = searchParams.get("linked");
 
-    console.log("Frontend - code:", code);
-    console.log("Frontend - userId:", userId);
+    if (linked === "true") {
+        alert("Google Calendar linked successfully!");
+        setTimeout(() => navigate("/dashboard"), 1500);
+      } else {
+        navigate("/dashboard");
+      }
 
-    if (!code || !userId) {
-      alert("Missing code or userId in OAuth callback.");
-      return;
-    }
-
-    // Send code and userId to backend
-    fetch(`http://localhost:8080/api/oauth/callback`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code, userId }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          console.log("OAuth success:", data);
-          navigate("/dashboard"); // redirect after successful auth
-        } else {
-          console.error("OAuth error:", data.error);
-          alert("OAuth failed: " + data.error);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("OAuth failed");
-      });
+    // Redirect to dashboard
+    navigate("/dashboard");
   }, [searchParams, navigate]);
 
   return <div>Connecting your Google Calendar...</div>;
