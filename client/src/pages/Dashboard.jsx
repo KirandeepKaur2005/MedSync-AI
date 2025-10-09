@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState(12);  //  will add it for afterwards(streak = number of days for 100% adherence)
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [linked, setLinked] = useState(false);
 
 
 
@@ -115,6 +116,38 @@ export default function Dashboard() {
     window.location.href = '/';
   };
 
+  const handleConnectCalendar = async () => {
+    try {
+      const localuser = JSON.parse(localStorage.getItem("user"));
+      if (!localuser?.id) return alert("Please log in first");
+
+      // Go directly to the backend OAuth login endpoint 
+      // oAuth does not work with fetch you need to redirect
+      window.location.href = `http://localhost:8080/api/oauth/login?userId=${localuser.id}`;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.id || user?._id; 
+    if (!userId?.id) {
+      console.warn("User ID not found in localStorage!");
+      return;
+    }
+    fetch(`http://localhost:8080/api/calendar/status/${userId?.id || userId?._id || userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.linked) {
+          setLinked(true);
+          setAccount(data.account);
+        } else {
+          setLinked(false);
+        }
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
       
@@ -151,6 +184,14 @@ export default function Dashboard() {
               <Settings className="w-5 h-5" />
               <span>Health Profile</span>
             </button>
+            {linked ? (
+              <p className="text-green-500">✅ Linked to {account}</p>
+              ) : (
+              <button onClick={handleConnectCalendar} className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-white transition-all">
+                <Calendar className="w-5 h-5" />
+                <span>Connect Google Calendar</span>
+                </button>
+            )}
           </nav>
 
           <div className="absolute bottom-6 left-6 right-6">
