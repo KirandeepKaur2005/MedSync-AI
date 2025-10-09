@@ -17,20 +17,26 @@ if (!GROQ_API_KEY) {
 }
 
 // define the model
-const chatModel = new ChatGroq({
-  model: "llama-3.3-70b-versatile",
-  temperature: 0,
-  maxTokens: undefined,
-  maxRetries: 2,
-  apiKey: GROQ_API_KEY,
-});
+let chatModel;
+try {
+  chatModel = new ChatGroq({
+    model: "llama-3.3-70b-versatile",
+    temperature: 0,
+    maxTokens: undefined,
+    maxRetries: 2,
+    apiKey: GROQ_API_KEY,
+  });
+} catch (error) {
+  console.warn('ChatGroq initialization failed, personal health model will not be available:', error.message);
+}
 
-
-
-const memory = new ConversationSummaryMemory({
-  memoryKey: "chat_history",
-  llm: chatModel,
-});
+let memory;
+if (chatModel) {
+  memory = new ConversationSummaryMemory({
+    memoryKey: "chat_history",
+    llm: chatModel,
+  });
+}
 
 //call the data from the database and add to the meory element
 let pastData;
@@ -44,21 +50,31 @@ try{
 }
 
 // data stored in the memory
-await memory.saveContext(
-  { input: "What medications are available in the database?" },
-  { output: `Available medications:\n${userData}` }
-);
-await memory.saveContext(
-  { input: "What is the past chat?" },
-  { output: `Past Chat:\n${JSON.stringify(pastData, null, 2)}` }
-);
+if (memory) {
+  await memory.saveContext(
+    { input: "What medications are available in the database?" },
+    { output: `Available medications:\n${userData}` }
+  );
+  await memory.saveContext(
+    { input: "What is the past chat?" },
+    { output: `Past Chat:\n${JSON.stringify(pastData, null, 2)}` }
+  );
+}
 
 // Verify memory content
-const memoryVariables = await memory.loadMemoryVariables({});
-console.log("Memory loaded with medication data:", memoryVariables);
-
+if (memory) {
+  const memoryVariables = await memory.loadMemoryVariables({});
+  console.log("Memory loaded with medication data:", memoryVariables);
+}
 
 export default async function personalHealthModelHandler(req, res) {
+  if (!chatModel) {
+    return res.status(503).json({ 
+      success: false, 
+      error: "Personal health model is not available. GROQ_API_KEY may not be configured properly." 
+    });
+  }
+
   try {
     const input = req.body?.input || "What is my medical status ?";
 

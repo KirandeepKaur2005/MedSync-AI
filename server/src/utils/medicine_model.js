@@ -17,19 +17,27 @@ if (!GROQ_API_KEY) {
 }
 
 // define the model (pass apiKey explicitly)
-const chatModel = new ChatGroq({
-  model: "llama-3.3-70b-versatile",
-  temperature: 0,
-  maxTokens: undefined,
-  maxRetries: 2,
-  apiKey: GROQ_API_KEY,
-});
+let chatModel;
+try {
+  chatModel = new ChatGroq({
+    model: "llama-3.3-70b-versatile",
+    temperature: 0,
+    maxTokens: undefined,
+    maxRetries: 2,
+    apiKey: GROQ_API_KEY,
+  });
+} catch (error) {
+  console.warn('ChatGroq initialization failed, medicine model will not be available:', error.message);
+}
 
 // define the memory
-const memory = new ConversationSummaryMemory({
-  memoryKey: "chat_history",
-  llm: chatModel,
-});
+let memory;
+if (chatModel) {
+  memory = new ConversationSummaryMemory({
+    memoryKey: "chat_history",
+    llm: chatModel,
+  });
+}
 
 //call the past memory
 let pastData
@@ -41,14 +49,23 @@ try{
 }
 
 //add memory in the memory veriable
-await memory.saveContext(
-  { input: "What is the past chat?" },
-  { output: `Past Chat:\n${JSON.stringify(pastData, null, 2)}` }
-);
+if (memory) {
+  await memory.saveContext(
+    { input: "What is the past chat?" },
+    { output: `Past Chat:\n${JSON.stringify(pastData, null, 2)}` }
+  );
+}
 
 
 
 export default async function medicineModelHandler(req, res) {
+  if (!chatModel) {
+    return res.status(503).json({ 
+      success: false, 
+      error: "Medicine model is not available. GROQ_API_KEY may not be configured properly." 
+    });
+  }
+
   try {
     const input = req.body?.input || "What is my medical status ?";
 
