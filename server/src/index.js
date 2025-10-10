@@ -11,7 +11,7 @@ import startNotificationScheduler from "./api/notificationController.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js"
 import agentsRoutes from "./routes/agentsRoutes.js";
-
+import calendarSyncRoutes from "./routes/calendarSyncRoutes.js";
 import oauthRoutes from "./routes/oauth.js";
 
 import { fileURLToPath } from 'url';
@@ -55,6 +55,7 @@ app.use("/api/notification",notificationRoutes );
 app.use("/api/medicine",MedicineRoutes );
 app.use("/api/health", healthRoutes);
 app.use("/api/oauth", oauthRoutes);
+app.use("/api/calendar", calendarSyncRoutes);
 
 // Test route
 app.get("/", (req, res) => {
