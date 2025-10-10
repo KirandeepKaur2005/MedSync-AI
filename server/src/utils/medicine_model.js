@@ -39,6 +39,8 @@ try {
   console.warn('ChatGroq initialization failed, medicine model will not be available:', error.message);
 }
 
+
+
 // define the memory
 const summaryPrompt = PromptTemplate.fromTemplate(`
 Progressively summarize the conversation. Keep the summary under 50 words and return only the summary.
