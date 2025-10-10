@@ -41,7 +41,6 @@ function App() {
       <Route path="/reportChat" element={<ReportChat />} />
       <Route path="/report-analysis" element={<ReportAnalysis />} />
     </Routes>
-      </Routes>
       
       {/* Global notification toasts */}
       <NotificationContainer 
