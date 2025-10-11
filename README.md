@@ -19,6 +19,7 @@ Here's a simplified flow:
 3.  **Medication Management:** The user can add new medications. The frontend sends the medication details to the backend, which stores them in the database.
 4.  **Notifications:** The backend includes a scheduler that creates and sends notifications to the user about upcoming or missed doses.
 5.  **AI Agents:** The user can chat with various AI health assistants. The frontend sends the user's query to a specific backend endpoint, which then uses LangChain and a designated AI model (like Google's Generative AI or Groq) to generate a response.
+6.  **Report Generation and Analysis**: Users can generate health reports, upload them for analysis, and even chat with the analyzed reports.
 
 ---
 
@@ -34,16 +35,21 @@ The client-side is a modern, responsive React application built with Vite. It pr
 * **Smart Notifications:** A dedicated page to view all medication reminders and alerts.
 * **AI-Powered Health Agents:** A multi-agent chat interface to interact with specialized AI assistants for medical knowledge, personal health tracking, medication information, and emergency triage.
 * **Health Profile:** A section for users to manage their personal health information.
+* **Report Analysis**: Upload health reports for AI-powered analysis.
+* **Report Chat**: Chat with your uploaded and analyzed health reports.
+* **Google Calendar Sync**: Sync your medication schedule with your Google Calendar.
 
 ### 🛠️ Tech Stack
 
-* **Framework:** React 19
+* **Framework:** React
 * **Build Tool:** Vite
 * **Styling:** Tailwind CSS
 * **Routing:** React Router
 * **HTTP Client:** Axios
+* **State Management:** React Context API
+* **Real-time Communication:** Socket.IO Client
 * **Icons:** Lucide React
-* **State Management:** React Context API (for medication and notification data)
+* **Charting:** Recharts
 
 ### 🚀 Getting Started
 
@@ -70,6 +76,8 @@ The client-side is organized into pages, components, and contexts, following mod
 * `src/context`: Manages the application's state.
     * `medicationContext.jsx`: Handles state related to medications, including adding new medications and fetching today's schedule.
     * `notificationContext.jsx`: Manages notification-related state and interactions with the notification API.
+    * `socketContext.jsx`: Manages the WebSocket connection for real-time notifications.
+    * `calendarSyncContext.jsx`: Manages the Google Calendar synchronization state.
 * `src/App.jsx`: The main application component that sets up the routing using `react-router-dom`.
 
 The flow of the client application is as follows:
@@ -91,10 +99,12 @@ The server-side is a robust Node.js and Express.js application that serves as th
 * **RESTful API:** A well-structured API for all frontend functionalities.
 * **User Authentication:** Secure user registration and login using JWT.
 * **Medication Management:** CRUD operations for medications.
-* **Notification System:** A scheduler to create and manage user notifications for medication adherence.
+* **Notification System:** A scheduler to create and manage user notifications for medication adherence, delivered in real-time via WebSockets.
 * **AI Agent Integration:** A multi-agent system that leverages LangChain to interact with various large language models (LLMs) for different health-related queries.
 * **Health Profile Management:** API endpoints for creating and updating user health profiles.
-* **Reporting:** An endpoint to generate health reports (implementation details in `reportController.js`).
+* **Reporting:** An endpoint to generate health reports.
+* **PDF Report Analysis**: Upload and analyze PDF health reports using AI.
+* **Google Calendar Integration**: Securely syncs medication schedules to a user's Google Calendar using OAuth2.
 
 ### 🛠️ Tech Stack
 
@@ -102,7 +112,10 @@ The server-side is a robust Node.js and Express.js application that serves as th
 * **Database:** MongoDB with Mongoose
 * **Authentication:** JSON Web Tokens (JWT), bcrypt.js
 * **AI Integration:** LangChain, `@langchain/google-genai`, `@langchain/groq`
-* **Real-time Notifications:** `node-notifier` (for local testing)
+* **Real-time Communication:** Socket.IO
+* **PDF Parsing:** pdf-parse
+* **File Uploads:** Multer
+* **Google Calendar API:** googleapis
 * **Environment Variables:** dotenv
 
 ### 🚀 Getting Started
@@ -115,7 +128,8 @@ The server-side is a robust Node.js and Express.js application that serves as th
     ```bash
     npm install
     ```
-3.  **Run the development server:**
+3.  **Create a `.env` file** in the `server` directory and add the necessary environment variables (e.g., `MONGO_URI`, `JWT_SECRET`, `GROQ_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `REPORT_API`, `REPORT_TEMPLATE_ID` etc.).
+4.  **Run the development server:**
     ```bash
     npm run dev
     ```
@@ -130,7 +144,7 @@ The server-side is organized by features into routes, controllers, models, and u
 * `src/models`: Defines the Mongoose schemas for the database collections (`User.js`, `medicineModel.js`, `HealthProfile.js`, etc.).
 * `src/utils`: Contains utility functions, most notably the AI model handlers (`medical_model.js`, `emergency_model.js`, etc.). These files use LangChain to create prompts and interact with the LLMs.
 * `src/middlewares`: Contains middleware functions, such as `authMiddleware.js` for verifying JWT tokens.
-* `src/index.js`: The entry point of the server application.
+* `src/index.js`: The entry point of the server application, which also sets up the Socket.IO server.
 
 The flow of the server application is as follows:
 
