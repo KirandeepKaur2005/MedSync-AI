@@ -1,16 +1,31 @@
-# React + Vite
+# MedSync AI — Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite frontend for MedSync AI. Provides auth, dashboard, medication management, notifications, AI agents, report upload/chat, and Google Calendar connect.
 
-Currently, two official plugins are available:
+## Quick start
+```bash
+cd client
+npm install
+npm run dev   # http://localhost:5173
+```
+Run the backend from `../server` first (`npm run dev`) so API calls and Socket.IO connect.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Environment
+Create `client/.env` and point to your backend/OAuth endpoints:
+```
+VITE_API_BASE_URL=http://localhost:8080
+VITE_SOCKET_URL=http://localhost:8080
+VITE_GOOGLE_OAUTH_LOGIN=http://localhost:8080/api/oauth/login
+```
+If you change backend ports or hostnames, update these values.
 
-## React Compiler
+## Scripts
+- `npm run dev` – start Vite dev server
+- `npm run build` – production build
+- `npm run preview` – preview the build
+- `npm run lint` – eslint check
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## SWOC contributor tips
+- Keep backend running while testing pages that call the API (login, meds, reports, agents).
+- If you add endpoints, surface the base URL via envs (avoid hardcoded `http://localhost:8080`).
+- Attach screenshots/GIFs to PRs for UI tweaks; add brief testing notes.

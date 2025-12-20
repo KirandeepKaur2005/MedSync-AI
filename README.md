@@ -79,6 +79,14 @@ MedSync-AI/
 - API keys for Groq/Gemini (and any other LLM providers you use)
 - Google OAuth2 credentials (if using Calendar sync)
 
+### Quick dev (two terminals)
+- Terminal A: `cd server && npm install && npm run dev` (starts API on 8080)
+- Terminal B: `cd client && npm install && npm run dev` (starts web on 5173)
+
+### Useful scripts
+- Frontend: `npm run dev`, `npm run build`, `npm run lint`, `npm run preview`
+- Backend: `npm run dev`, `npm start`
+
 ### 1) Clone
 ```bash
 git clone https://github.com/tirth-patel06/MedSync-AI.git
@@ -108,6 +116,7 @@ npm run dev
 
 Create `server/.env` with your own (do NOT commit secrets):
 ```
+PORT=8080
 MONGO_URI=your_mongo_uri
 JWT_SECRET=your_jwt_secret
 
@@ -118,10 +127,22 @@ HUGGINGFACEHUB_API_KEY=your_hf_key
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 GOOGLE_REDIRECT_URI=your_redirect_uri
+
+REPORT_API=your_report_service_api_key
+REPORT_TEMPLATE_ID=5b077b23e86a4726
 ```
 If you use report-generation/analysis services, add those keys/IDs here too.
 
 **Security note:** Never commit real keys. If any were exposed, rotate them immediately and scrub from history.
+
+### Frontend `.env` (client)
+Add a `client/.env` to point the React app at your backend and OAuth endpoints:
+```
+VITE_API_BASE_URL=http://localhost:8080
+VITE_SOCKET_URL=http://localhost:8080
+VITE_GOOGLE_OAUTH_LOGIN=http://localhost:8080/api/oauth/login
+```
+If you change backend ports/hosts, update these values. Align `VITE_SOCKET_URL` with your Socket.IO server.
 
 ---
 
