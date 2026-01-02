@@ -3,6 +3,7 @@ import { Settings, Check } from 'lucide-react';
 import { useLanguage } from '../hooks/useTranslation.js';
 import axios from 'axios';
 
+export default function LanguageSettings() {
   const { supportedLanguages, language: currentLanguage, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -104,4 +105,5 @@ import axios from 'axios';
       )}
     </div>
   );
+}
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import ReadabilityChecker from '../src/utils/readabilityChecker.js';
-import { getReadingLevelLabel } from '../src/utils/languageConfig.js';
+import { getReadingLevelLabel, getReadingLevelGrade } from '../src/utils/languageConfig.js';
 
 const analyzeReadability = ReadabilityChecker.analyzeReadability.bind(ReadabilityChecker);
 
@@ -216,9 +216,9 @@ describe('Readability Checker', () => {
     it('should analyze text quickly (< 100ms)', () => {
       const text = 'This is a test sentence. It should be analyzed quickly.';
       const start = Date.now();
-      
+
       analyzeReadability(text, 'en');
-      
+
       const duration = Date.now() - start;
       expect(duration).toBeLessThan(100);
     });
@@ -226,9 +226,9 @@ describe('Readability Checker', () => {
     it('should handle large text efficiently', () => {
       const largeText = 'This is a sentence. '.repeat(500); // ~10000 chars
       const start = Date.now();
-      
+
       analyzeReadability(largeText, 'en');
-      
+
       const duration = Date.now() - start;
       expect(duration).toBeLessThan(500);
     });

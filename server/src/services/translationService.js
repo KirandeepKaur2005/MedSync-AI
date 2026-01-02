@@ -12,6 +12,7 @@ class TranslationService {
     this.apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
     this.maxRetries = 3;
     this.retryDelay = 1000; // ms
+    this.cache = cache;
   }
 
   /**
@@ -150,7 +151,7 @@ class TranslationService {
       // Apply medical terminology substitution if context is medical
       let textToTranslate = text;
       const medicalReplacements = {};
-      
+
       if (context === 'medical') {
         const result = this.applyMedicalTerminology(text);
         textToTranslate = result.text;

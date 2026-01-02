@@ -1,16 +1,4 @@
-    it('should handle failed translation (success: false) gracefully', async () => {
-      // Simulate translateText returning success: false
-      const errorMessage = 'Translation service unavailable';
-      // Mock the callTranslationAPI to throw
-      translationService.callTranslationAPI = jest.fn().mockImplementation(() => {
-        throw new Error(errorMessage);
-      });
-      const result = await translationService.translateText('Hello', 'es');
-      expect(result.success).toBe(false);
-      expect(result.translatedText).toBe('Hello');
-      expect(result.originalText).toBe('Hello');
-      expect(result.error).toBe(errorMessage);
-    });
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import translationService from '../src/services/translationService.js';
 

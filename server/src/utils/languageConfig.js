@@ -80,3 +80,12 @@ export const getReadingLevelKey = (grade) => {
   }
   return 'professional';
 };
+
+/**
+ * Get accurate grade from Flesch-Kincaid score
+ * @param {number} score - Flesch-Kincaid score
+ * @returns {number} - Grade level (clamped to 0)
+ */
+export const getReadingLevelGrade = (score) => {
+  return Math.max(0, score);
+};
